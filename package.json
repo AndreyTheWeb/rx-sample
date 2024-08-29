@@ -1,18 +1,32 @@
 {
   "name": "rx-sample",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "test": "vitest"
   },
+  "peerDependencies": {
+    "effector": ">=23",
+    "rxjs": ">=7.8.0"
+  },
   "devDependencies": {
+    "@types/node": "^22.5.1",
     "effector": "^23.2.2",
     "rxjs": "^7.8.1",
     "typescript": "^5.5.3",
     "vite": "^5.4.1",
+    "vite-plugin-dts": "^4.0.3",
     "vitest": "^2.0.5"
   }
 }
