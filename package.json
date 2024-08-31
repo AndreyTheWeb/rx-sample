@@ -17,6 +17,7 @@
     "effector",
     "rxjs"
   ],
+  "repository": "https://github.com/AndreyTheWeb/rx-sample",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
