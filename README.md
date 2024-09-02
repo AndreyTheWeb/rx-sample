@@ -55,11 +55,18 @@ sample({
 The rxSample function takes a single argument — an object with four required parameters:
 
 ```ts
-type Input<D, S, U> = {
+type Input<D> = {
   source: Observable<D>;
-  subscribeOn: EventCallable<S>;
-  unsubscribeOn: EventCallable<U>;
-  target: EventCallable<D> | EventCallable<void>;
+  subscribeOn: Event<unknown>;
+  unsubscribeOn: Event<unknown>;
+  target: EventCallable<D>;
+};
+
+type InputWithStore<D> = {
+  source: Store<Observable<D>>;
+  subscribeOn: Event<unknown>;
+  unsubscribeOn: Event<unknown>;
+  target: EventCallable<D>;
 };
 ```
 
