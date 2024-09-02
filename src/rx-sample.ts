@@ -1,49 +1,67 @@
 import {
-  createEffect,
   createStore,
   EventCallable,
   is,
   sample,
   Store,
+  Event,
+  attach,
+  scopeBind,
 } from "effector";
 import { Observable, Subscription } from "rxjs";
 
-type Input<D, S, U> = {
+type Input<D> = {
   source: Observable<D>;
-  subscribeOn: EventCallable<S>;
-  unsubscribeOn: EventCallable<U>;
-  target: EventCallable<D> | EventCallable<void>;
+  subscribeOn: Event<unknown>;
+  unsubscribeOn: Event<unknown>;
+  target: EventCallable<D>;
 };
 
-type InputWithStore<D, S, U> = {
+type InputWithStore<D> = {
   source: Store<Observable<D>>;
-  subscribeOn: EventCallable<S>;
-  unsubscribeOn: EventCallable<U>;
-  target: EventCallable<D> | EventCallable<void>;
+  subscribeOn: Event<unknown>;
+  unsubscribeOn: Event<unknown>;
+  target: EventCallable<D>;
 };
 
-export function rxSample<D, S, U>(config: Input<D, S, U>): void;
-export function rxSample<D, S, U>(config: InputWithStore<D, S, U>): void;
+export function rxSample<D>(config: Input<D>): void;
+export function rxSample<D>(config: InputWithStore<D>): void;
 
-export function rxSample<D, S, U>({
+export function rxSample<D>({
   source,
   subscribeOn,
   unsubscribeOn,
   target,
-}: Input<D, S, U> | InputWithStore<D, S, U>) {
-  const $subscription = createStore<Subscription | null>(null);
-
-  const subscribeFx = createEffect<S, Subscription>(() => {
-    const observable = is.store(source) ? source.getState() : source;
-    return observable.subscribe(target as EventCallable<D>);
+}: Input<D> | InputWithStore<D>) {
+  const $subscription = createStore<Subscription | null>(null, {
+    serialize: "ignore",
   });
 
-  const unsubscribeFx = createEffect<Subscription, void>((subscription) => {
-    subscription.unsubscribe();
+  const $observable = is.store(source)
+    ? source
+    : createStore(source, { serialize: "ignore" });
+
+  const subscribeFx = attach({
+    source: $subscription,
+    effect: (subscription, observable: Observable<D>) => {
+      subscription?.unsubscribe();
+
+      const boundTarget = scopeBind(target, { safe: true });
+
+      return observable.subscribe(boundTarget);
+    },
+  });
+
+  const unsubscribeFx = attach({
+    source: $subscription,
+    effect: (subscription) => {
+      subscription?.unsubscribe();
+    },
   });
 
   sample({
-    clock: subscribeOn,
+    clock: [subscribeOn, $observable],
+    source: $observable,
     target: subscribeFx,
   });
 
@@ -55,7 +73,6 @@ export function rxSample<D, S, U>({
   sample({
     clock: unsubscribeOn,
     source: $subscription,
-    filter: (sub): sub is Subscription => Boolean(sub),
     target: unsubscribeFx,
   });
 }
