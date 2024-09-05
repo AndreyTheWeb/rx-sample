@@ -13,11 +13,21 @@
       "require": "./dist/index.cjs"
     }
   },
+  "description": "rx-sample simplifies managing RxJS Observables with Effector events, ensuring streamlined subscription control in reactive applications.",
   "keywords": [
     "effector",
-    "rxjs"
+    "rxjs",
+    "typescript",
+    "observable",
+    "reactive-programming",
+    "subscription",
+    "reactivity"
   ],
-  "repository": "https://github.com/AndreyTheWeb/rx-sample",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AndreyTheWeb/rx-sample"
+  },
   "bugs": "https://github.com/AndreyTheWeb/rx-sample/issues",
   "scripts": {
     "dev": "vite",
