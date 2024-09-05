@@ -32,7 +32,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "test": "vitest"
+    "test": "vitest",
+    "lint:ts": "tsc -p tsconfig.json --noEmit"
   },
   "peerDependencies": {
     "effector": ">=23",
