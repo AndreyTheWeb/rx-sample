@@ -1,3 +1,5 @@
+### [The package repository has moved to a new address](https://github.com/Voiso/rx-sample), I am still one of the maintainers, all questions and suggestions please contact me.
+
 # rx-sample
 
 `rx-sample` is a utility for working with RxJS in conjunction with Effector, making it easy to manage subscriptions to Observables using Effector events.
